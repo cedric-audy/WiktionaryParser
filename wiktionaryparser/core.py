@@ -1,23 +1,23 @@
 import re, requests
-from wiktionaryparser.utils import WordData, Definition, RelatedWord
+from .utils import WordData, Definition, RelatedWord
 from bs4 import BeautifulSoup
 from itertools import zip_longest
 from copy import copy
 from string import digits
 
-PARTS_OF_SPEECH = [
-    "noun", "verb", "adjective", "adverb", "determiner",
-    "article", "preposition", "conjunction", "proper noun",
-    "letter", "character", "phrase", "proverb", "idiom",
-    "symbol", "syllable", "numeral", "initialism", "interjection",
-    "definitions", "pronoun", "particle", "predicative", "participle",
-    "suffix",
+PARTS_OF_SPEECH = [ "nom commun"
+    # "noun", "verb", "adjective", "adverb", "determiner",
+    # "article", "preposition", "conjunction", "proper noun",
+    # "letter", "character", "phrase", "proverb", "idiom",
+    # "symbol", "syllable", "numeral", "initialism", "interjection",
+    # "definitions", "pronoun", "particle", "predicative", "participle",
+    # "suffix",
 ]
 
 RELATIONS = [
-    "synonyms", "antonyms", "hypernyms", "hyponyms",
-    "meronyms", "holonyms", "troponyms", "related terms",
-    "coordinate terms",
+    # "synonyms", "antonyms", "hypernyms", "hyponyms",
+    # "meronyms", "holonyms", "troponyms", "related terms",
+    # "coordinate terms",
 ]
 
 def is_subheading(child, parent):
@@ -37,7 +37,7 @@ class WiktionaryParser(object):
         self.session = requests.Session()
         self.session.mount("http://", requests.adapters.HTTPAdapter(max_retries = 2))
         self.session.mount("https://", requests.adapters.HTTPAdapter(max_retries = 2))
-        self.language = 'english'
+        self.language = 'français'
         self.current_word = None
         self.PARTS_OF_SPEECH = copy(PARTS_OF_SPEECH)
         self.RELATIONS = copy(RELATIONS)
@@ -109,6 +109,8 @@ class WiktionaryParser(object):
 
     def get_word_data(self, language):
         contents = self.soup.find_all('span', {'class': 'toctext'})
+        for c in contents:
+            print(c)
         word_contents = []
         start_index = None
         for content in contents:
@@ -127,8 +129,10 @@ class WiktionaryParser(object):
         for content in contents:
             index = content.find_previous().text
             content_text = self.remove_digits(content.text.lower())
+            
             if index.startswith(start_index) and content_text in self.INCLUDED_ITEMS:
                 word_contents.append(content)
+        print(word_contents)
         word_data = {
             'examples': self.parse_examples(word_contents),
             'definitions': self.parse_definitions(word_contents),
