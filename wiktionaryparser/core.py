@@ -5,7 +5,7 @@ from itertools import zip_longest
 from copy import copy
 from string import digits
 
-PARTS_OF_SPEECH = [ "nom commun"
+PARTS_OF_SPEECH = [ "nom commun", "étymologie"
     # "noun", "verb", "adjective", "adverb", "determiner",
     # "article", "preposition", "conjunction", "proper noun",
     # "letter", "character", "phrase", "proverb", "idiom",
@@ -84,8 +84,8 @@ class WiktionaryParser(object):
         return len(list(filter(str.isdigit, string)))
 
     def get_id_list(self, contents, content_type):
-        if content_type == 'etymologies':
-            checklist = ['etymology']
+        if content_type == 'étymologie':
+            checklist = ['étymologie']
         elif content_type == 'pronunciation':
             checklist = ['pronunciation']
         elif content_type == 'definitions':
@@ -213,7 +213,7 @@ class WiktionaryParser(object):
         return example_list
 
     def parse_etymologies(self, word_contents):
-        etymology_id_list = self.get_id_list(word_contents, 'etymologies')
+        etymology_id_list = self.get_id_list(word_contents, 'étymologie')
         etymology_list = []
         etymology_tag = None
         for etymology_index, etymology_id, _ in etymology_id_list:
@@ -223,7 +223,7 @@ class WiktionaryParser(object):
             while next_tag and next_tag.name not in ['h3', 'h4', 'div', 'h5']:
                 etymology_tag = next_tag
                 next_tag = next_tag.find_next_sibling()
-                if etymology_tag.name == 'p':
+                if etymology_tag.name == 'dl':
                     etymology_text += etymology_tag.text
                 else:
                     for list_tag in etymology_tag.find_all('li'):
