@@ -41,7 +41,7 @@ class WiktionaryParser(object):
         self.current_word = None
         self.PARTS_OF_SPEECH = copy(PARTS_OF_SPEECH)
         self.RELATIONS = copy(RELATIONS)
-        self.INCLUDED_ITEMS = self.RELATIONS + self.PARTS_OF_SPEECH + ['etymology', 'pronunciation']
+        self.INCLUDED_ITEMS = self.RELATIONS + self.PARTS_OF_SPEECH #+ ['etymology', 'pronunciation']
 
     def include_part_of_speech(self, part_of_speech):
         part_of_speech = part_of_speech.lower()
