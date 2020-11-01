@@ -1,5 +1,5 @@
-from .utils import WordData, Definition, RelatedWord
-from .core import PARTS_OF_SPEECH, RELATIONS, WiktionaryParser
+from wiktionaryparser.utils import WordData, Definition, RelatedWord
+from wiktionaryparser.core import PARTS_OF_SPEECH, RELATIONS, WiktionaryParser
 
 __all__ = [
     'WordData',

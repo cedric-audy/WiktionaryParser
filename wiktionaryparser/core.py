@@ -1,11 +1,12 @@
 import re, requests
-from .utils import WordData, Definition, RelatedWord
+from wiktionaryparser.utils import WordData, Definition, RelatedWord
 from bs4 import BeautifulSoup
 from itertools import zip_longest
 from copy import copy
 from string import digits
 
-PARTS_OF_SPEECH = [ "nom commun", "étymologie"
+PARTS_OF_SPEECH = [ "nom commun", "étymologie", "synonymes", "dérivés",
+    "vocabulaire apparenté par le sens", "hyperonymes", "hyponymes"
     # "noun", "verb", "adjective", "adverb", "determiner",
     # "article", "preposition", "conjunction", "proper noun",
     # "letter", "character", "phrase", "proverb", "idiom",
@@ -180,10 +181,10 @@ class WiktionaryParser(object):
             while table and table.name not in ['h3', 'h4', 'h5']:
                 definition_tag = table
                 table = table.find_next_sibling()
-                if definition_tag.name == 'p':
+                if definition_tag.name == 'p' or definition_tag.name == 'dl':
                     definition_text.append(definition_tag.text.strip())
-                if definition_tag.name in ['ol', 'ul']:
-                    for element in definition_tag.find_all('li', recursive=False):
+                if definition_tag.name in ['ol', 'ul', 'div']:
+                    for element in definition_tag.find_all('li', recursive=True):
                         if element.text:
                             definition_text.append(element.text.strip())
             if def_type == 'definitions':
